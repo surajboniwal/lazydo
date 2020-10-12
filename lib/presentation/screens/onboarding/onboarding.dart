@@ -15,7 +15,7 @@ class OnBoardingScreen extends StatefulWidget {
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProviderStateMixin {
   AnimationController _controller;
-  double _opacityOfText = 0;
+
   List<OnBoarding> _onBoardingScreens = getOnBoardingScreens();
   OnBoardingHeaderController _onBoardingHeaderController = OnBoardingHeaderController();
   PageController _pageViewScrollController = PageController(initialPage: 0);
@@ -23,7 +23,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProvider
   @override
   void initState() {
     super.initState();
-    _opacityOfText = 1.0;
+
     _controller = AnimationController(vsync: this);
   }
 
@@ -49,30 +49,26 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProvider
                   child: GetBuilder<OnBoardingHeaderController>(
                 init: _onBoardingHeaderController,
                 builder: (_onBoardingHeaderController) {
-                  return AnimatedOpacity(
-                    duration: Duration(seconds: 1),
-                    opacity: _opacityOfText,
-                    child: RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: _onBoardingHeaderController.title,
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
+                  return RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: _onBoardingHeaderController.title,
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
                           ),
-                          TextSpan(text: '\n'),
-                          TextSpan(
-                            text: _onBoardingHeaderController.desc,
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                            ),
+                        ),
+                        TextSpan(text: '\n'),
+                        TextSpan(
+                          text: _onBoardingHeaderController.desc,
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   );
                 },
@@ -100,17 +96,12 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProvider
                   );
                 },
                 onPageChanged: (value) {
-                  _opacityOfText =0;
-                  Future.delayed(
-                    Duration(seconds: 1),
-                      (){
-                      _opacityOfText = 1;
-                      }
-                  );
+
                   _onBoardingHeaderController.updateInfo(value);
                   _controller.reset();
                   _controller.forward();
                   _onBoardingHeaderController.setIcon(value);
+
                 },
               ),
             ),
