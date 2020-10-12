@@ -13,11 +13,13 @@ class OnBoardingScreen extends StatefulWidget {
   _OnBoardingScreenState createState() => _OnBoardingScreenState();
 }
 
-class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProviderStateMixin {
+class _OnBoardingScreenState extends State<OnBoardingScreen>
+    with TickerProviderStateMixin {
   AnimationController _controller;
 
   List<OnBoarding> _onBoardingScreens = getOnBoardingScreens();
-  OnBoardingHeaderController _onBoardingHeaderController = OnBoardingHeaderController();
+  OnBoardingHeaderController _onBoardingHeaderController =
+      OnBoardingHeaderController();
   PageController _pageViewScrollController = PageController(initialPage: 0);
 
   @override
@@ -110,8 +112,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProvider
               return FloatingActionButton(
                 onPressed: () {
                   if (_pageViewScrollController.page.toInt() < 2) {
-                    _pageViewScrollController.animateToPage(_pageViewScrollController.page.toInt() + 1,
-                        duration: Duration(milliseconds: 200), curve: Curves.easeOut);
+                    _pageViewScrollController.animateToPage(
+                        _pageViewScrollController.page.toInt() + 1,
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.easeOut);
                   } else {
                     print('next screen');
                   }
