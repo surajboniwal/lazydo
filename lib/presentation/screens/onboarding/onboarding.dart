@@ -13,11 +13,13 @@ class OnBoardingScreen extends StatefulWidget {
   _OnBoardingScreenState createState() => _OnBoardingScreenState();
 }
 
-class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProviderStateMixin {
+class _OnBoardingScreenState extends State<OnBoardingScreen>
+    with TickerProviderStateMixin {
   AnimationController _controller;
 
   List<OnBoarding> _onBoardingScreens = getOnBoardingScreens();
-  OnBoardingHeaderController _onBoardingHeaderController = OnBoardingHeaderController();
+  OnBoardingHeaderController _onBoardingHeaderController =
+      OnBoardingHeaderController();
   PageController _pageViewScrollController = PageController(initialPage: 0);
 
   @override
@@ -45,33 +47,34 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProvider
               height: height * 0.40,
               color: AppColors.primaryColor,
               child: Center(
-                  child: GetBuilder<OnBoardingHeaderController>(
-                init: _onBoardingHeaderController,
-                builder: (_onBoardingHeaderController) {
-                  return RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: _onBoardingHeaderController.title,
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                child: GetBuilder<OnBoardingHeaderController>(
+                  init: _onBoardingHeaderController,
+                  builder: (_onBoardingHeaderController) {
+                    return RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: _onBoardingHeaderController.title,
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        TextSpan(text: '\n'),
-                        TextSpan(
-                          text: _onBoardingHeaderController.desc,
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
+                          TextSpan(text: '\n'),
+                          TextSpan(
+                            text: _onBoardingHeaderController.desc,
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              )),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
           ),
           Expanded(
@@ -109,8 +112,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProvider
               return FloatingActionButton(
                 onPressed: () {
                   if (_pageViewScrollController.page.toInt() < 2) {
-                    _pageViewScrollController.animateToPage(_pageViewScrollController.page.toInt() + 1,
-                        duration: Duration(milliseconds: 200), curve: Curves.easeOut);
+                    _pageViewScrollController.animateToPage(
+                        _pageViewScrollController.page.toInt() + 1,
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.easeOut);
                   } else {
                     print('next screen');
                   }
