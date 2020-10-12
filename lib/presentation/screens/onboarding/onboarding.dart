@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 import 'package:lazydo/data/controllers/on_boarding_header_controller.dart';
 import 'package:lazydo/data/models/onboarding.dart';
 import 'package:lazydo/presentation/screens/onboarding/widgets/clippers.dart';
@@ -23,7 +23,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProvider
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(vsync: this);
   }
 
@@ -35,8 +34,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    double height = Get.height;
+    double width = Get.width;
     return Scaffold(
       body: Column(
         children: [
@@ -96,12 +95,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProvider
                   );
                 },
                 onPageChanged: (value) {
-
                   _onBoardingHeaderController.updateInfo(value);
                   _controller.reset();
                   _controller.forward();
                   _onBoardingHeaderController.setIcon(value);
-
                 },
               ),
             ),
@@ -110,7 +107,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProvider
             init: _onBoardingHeaderController,
             builder: (controller) {
               return FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (_pageViewScrollController.page.toInt() < 2) {
+                    _pageViewScrollController.animateToPage(_pageViewScrollController.page.toInt() + 1,
+                        duration: Duration(milliseconds: 200), curve: Curves.easeOut);
+                  } else {
+                    print('next screen');
+                  }
+                },
                 backgroundColor: AppColors.primaryColor,
                 child: Icon(controller.icon),
               );
