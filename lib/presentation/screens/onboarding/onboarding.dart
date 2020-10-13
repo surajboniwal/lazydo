@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lazydo/data/controllers/on_boarding_header_controller.dart';
-import 'package:lazydo/data/models/onboarding.dart';
-import 'package:lazydo/presentation/screens/onboarding/widgets/clippers.dart';
-import 'package:lazydo/presentation/styles/colors.dart';
-import 'package:lazydo/presentation/widgets/disable_scroll_glow.dart';
+import '../../../controllers/on_boarding_header_controller.dart';
+import '../../../data/models/onboarding.dart';
+import 'widgets/clippers.dart';
+import '../../styles/colors.dart';
+import '../../widgets/disable_scroll_glow.dart';
 import 'package:lottie/lottie.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 

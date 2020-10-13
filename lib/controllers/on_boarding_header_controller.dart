@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/state_manager.dart';
-import 'package:lazydo/data/models/onboarding.dart';
+import '../data/models/onboarding.dart';
 
 List<OnBoarding> onBoardingScreens = getOnBoardingScreens();
 
