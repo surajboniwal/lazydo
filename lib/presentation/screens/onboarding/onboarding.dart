@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_navigation/src/routes/default_transitions.dart';
 import '../../../controllers/on_boarding_header_controller.dart';
 import '../../../data/models/onboarding.dart';
 import 'widgets/clippers.dart';
@@ -22,16 +23,33 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
       OnBoardingHeaderController();
   PageController _pageViewScrollController = PageController(initialPage: 0);
 
+  AnimationController _opacityController;
+  Animation<double> _opacity;
+
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this);
+
+    //tweak duration for improving fade transition
+    _opacityController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    )..addListener(() => setState(() {}));
+
+    _opacity = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(_opacityController);
+
+    _opacityController.forward();
   }
 
   @override
   void dispose() {
     super.dispose();
     _controller.dispose();
+    _opacityController.dispose();
   }
 
   @override
@@ -50,26 +68,29 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
                 child: GetBuilder<OnBoardingHeaderController>(
                   init: _onBoardingHeaderController,
                   builder: (_onBoardingHeaderController) {
-                    return RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: _onBoardingHeaderController.title,
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                    return FadeTransition(
+                      opacity: _opacity,
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: _onBoardingHeaderController.title,
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          TextSpan(text: '\n'),
-                          TextSpan(
-                            text: _onBoardingHeaderController.desc,
-                            style: TextStyle(
-                              fontFamily: 'Montserrat',
+                            TextSpan(text: '\n'),
+                            TextSpan(
+                              text: _onBoardingHeaderController.desc,
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -98,6 +119,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
                   );
                 },
                 onPageChanged: (value) {
+                  _opacityController.reset();
+                  _opacityController.forward();
                   _onBoardingHeaderController.updateInfo(value);
                   _controller.reset();
                   _controller.forward();
