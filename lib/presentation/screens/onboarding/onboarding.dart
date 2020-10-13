@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/routes/default_transitions.dart';
 import '../../../controllers/on_boarding_header_controller.dart';
 import '../../../data/models/onboarding.dart';
 import 'widgets/clippers.dart';
@@ -14,13 +13,11 @@ class OnBoardingScreen extends StatefulWidget {
   _OnBoardingScreenState createState() => _OnBoardingScreenState();
 }
 
-class _OnBoardingScreenState extends State<OnBoardingScreen>
-    with TickerProviderStateMixin {
+class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProviderStateMixin {
   AnimationController _controller;
 
   List<OnBoarding> _onBoardingScreens = getOnBoardingScreens();
-  OnBoardingHeaderController _onBoardingHeaderController =
-      OnBoardingHeaderController();
+  OnBoardingHeaderController _onBoardingHeaderController = OnBoardingHeaderController();
   PageController _pageViewScrollController = PageController(initialPage: 0);
 
   AnimationController _opacityController;
@@ -34,7 +31,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
     //tweak duration for improving fade transition
     _opacityController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: Duration(milliseconds: 500),
     )..addListener(() => setState(() {}));
 
     _opacity = Tween<double>(
@@ -135,10 +132,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
               return FloatingActionButton(
                 onPressed: () {
                   if (_pageViewScrollController.page.toInt() < 2) {
-                    _pageViewScrollController.animateToPage(
-                        _pageViewScrollController.page.toInt() + 1,
-                        duration: Duration(milliseconds: 200),
-                        curve: Curves.easeOut);
+                    _pageViewScrollController.animateToPage(_pageViewScrollController.page.toInt() + 1,
+                        duration: Duration(milliseconds: 200), curve: Curves.easeOut);
                   } else {
                     print('next screen');
                   }
