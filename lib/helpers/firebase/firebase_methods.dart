@@ -10,7 +10,7 @@ class FirebaseMethods {
     return _auth.currentUser;
   }
 
-  Future<UserCredential> signIn() async {
+  Future<UserCredential> signInWithGoogle() async {
     googleUser = await GoogleSignIn().signIn();
     if (googleUser != null) {
       GoogleSignInAuthentication googleAuth = await googleUser.authentication;
@@ -23,9 +23,10 @@ class FirebaseMethods {
         return await _auth.signInWithCredential(credential);
       }
     }
+    return null;
   }
 
-  Future<void> signOut() async {
+  Future<void> signOutFromGoogle() async {
     await GoogleSignIn().signOut();
     return await _auth.signOut();
   }
