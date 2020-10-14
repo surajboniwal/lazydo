@@ -5,11 +5,12 @@ class FirebaseMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignInAccount googleUser;
 
-  //Future Method
+  //Future Method here if current user is null it means it logged out
   Future<User> getUser() async {
     return _auth.currentUser;
   }
 
+  //it does sign in and returns Credentials that later can be used to store in DB
   Future<UserCredential> signInWithGoogle() async {
     googleUser = await GoogleSignIn().signIn();
     if (googleUser != null) {
@@ -26,7 +27,8 @@ class FirebaseMethods {
     return null;
   }
 
-  Future<void> signOutFromGoogle() async {
+  //Signout function makes current user as null
+  Future<void> signOutWithGoogle() async {
     await GoogleSignIn().signOut();
     return await _auth.signOut();
   }
