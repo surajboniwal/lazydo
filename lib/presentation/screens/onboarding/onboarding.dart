@@ -48,6 +48,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProvider
     super.dispose();
     _controller.dispose();
     _opacityController.dispose();
+    _pageViewScrollController.dispose();
   }
 
   @override
