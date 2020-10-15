@@ -76,9 +76,9 @@ class _AccountScreenState extends State<AccountScreen> {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgPicture.asset('assets/svg/google.svg', height: 72),
-                          SvgPicture.asset('assets/svg/facebook.svg', height: 72),
-                          SvgPicture.asset('assets/svg/github.svg', height: 72),
+                          _buildSocialButton('assets/svg/google.svg'),
+                          _buildSocialButton('assets/svg/facebook.svg'),
+                          _buildSocialButton('assets/svg/github.svg'),
                         ],
                       ),
                       SizedBox(height: Get.height * 0.05)
@@ -90,6 +90,21 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Container _buildSocialButton(String iconLocation) {
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black,
+            spreadRadius: -10,
+            blurRadius: 10,
+          ),
+        ],
+      ),
+      child: SvgPicture.asset(iconLocation, height: 72),
     );
   }
 }
