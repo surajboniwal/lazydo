@@ -67,6 +67,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
+                          fontWeight: FontWeight.w600,
                           fontFamily: 'Montserrat',
                         ),
                       ),
