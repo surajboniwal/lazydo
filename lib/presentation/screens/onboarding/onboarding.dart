@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lazydo/presentation/screens/account/account.dart';
 import '../../../controllers/on_boarding_header_controller.dart';
 import '../../../data/models/onboarding.dart';
 import 'widgets/clippers.dart';
@@ -135,7 +136,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> with TickerProvider
                     _pageViewScrollController.animateToPage(_pageViewScrollController.page.toInt() + 1,
                         duration: Duration(milliseconds: 200), curve: Curves.easeOut);
                   } else {
-                    print('next screen');
+                    Get.off(AccountScreen());
                   }
                 },
                 backgroundColor: AppColors.primaryColor,
