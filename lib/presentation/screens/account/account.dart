@@ -46,13 +46,46 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
           ),
           Container(color: Colors.black.withOpacity(0.2)),
-          Container(
-            alignment: Alignment.center,
-            height: Get.height * 0.4,
-            child: SvgPicture.asset(
-              'assets/svg/logo.svg',
-              height: Get.height * 0.22,
-            ),
+          Column(
+            children: [
+              Container(
+                alignment: Alignment.center,
+                height: Get.height * 0.4,
+                child: SvgPicture.asset(
+                  'assets/svg/logo.svg',
+                  height: Get.height * 0.22,
+                ),
+              ),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Sign in to get started!',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset('assets/svg/google.svg', height: 72),
+                          SvgPicture.asset('assets/svg/facebook.svg', height: 72),
+                          SvgPicture.asset('assets/svg/github.svg', height: 72),
+                        ],
+                      ),
+                      SizedBox(height: Get.height * 0.05)
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
