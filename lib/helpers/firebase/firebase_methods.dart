@@ -76,4 +76,21 @@ class FirebaseMethods {
         .doc(credential.user.uid)
         .set(userDetail.toMap());
   }
+
+  //See this if it gets error from the auth use UserDetails from below too
+  Future<void> updateUser(User user, String key, String value) {
+    return _userCollection
+        .doc(user.uid)
+        .update({'$key': '$value'})
+        .then((value) => print("User Updated"))
+        .catchError((error) => print("Failed to update user: $error"));
+  }
+
+  Future<void> updateUserUsingClass(UserDetail user, String key, String value) {
+    return _userCollection
+        .doc(user.id)
+        .update({'$key': '$value'})
+        .then((value) => print("User Updated"))
+        .catchError((error) => print("Failed to update user: $error"));
+  }
 }
