@@ -9,8 +9,7 @@ class FirebaseMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignInAccount googleUser;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  static final CollectionReference _userCollection =
-      FirebaseFirestore.instance.collection('userDetails');
+  static final CollectionReference _userCollection = FirebaseFirestore.instance.collection('userDetails');
 
   //Future Method here if current user is null it means it logged out
   Future<User> getUser() async {
@@ -48,9 +47,8 @@ class FirebaseMethods {
       case GitHubSignInResultStatus.ok:
         print(result.token);
         if (result.token != null) {
-// Create a credential from the access token
-          final AuthCredential githubAuthCredential =
-              GithubAuthProvider.credential(result.token);
+          // Create a credential from the access token
+          final AuthCredential githubAuthCredential = GithubAuthProvider.credential(result.token);
           return await _auth.signInWithCredential(githubAuthCredential);
         } else {
           print('error');
@@ -63,6 +61,8 @@ class FirebaseMethods {
         print(result.errorMessage);
         return null;
         break;
+      default:
+        return null;
     }
   }
 
@@ -80,17 +80,13 @@ class FirebaseMethods {
   //Get user Details
   Future<UserDetail> getUserDetails() async {
     User currentUser = await getUser();
-    DocumentSnapshot documentSnapshot =
-        await _userCollection.doc(currentUser.uid).get();
+    DocumentSnapshot documentSnapshot = await _userCollection.doc(currentUser.uid).get();
     return UserDetail.fromMap(documentSnapshot.data());
   }
 
   //Is user present in DB
   Future<bool> authenticateUser(UserCredential userCredential) async {
-    QuerySnapshot results = await firestore
-        .collection('userDetails')
-        .where('email', isEqualTo: userCredential.user.email)
-        .get();
+    QuerySnapshot results = await firestore.collection('userDetails').where('email', isEqualTo: userCredential.user.email).get();
     final List<DocumentSnapshot> docs = results.docs;
 
     return docs.length == 0 ? true : false;
@@ -110,10 +106,7 @@ class FirebaseMethods {
         profilePhoto: credential.user.photoURL,
         userName: username);
 
-    firestore
-        .collection('userDetails')
-        .doc(credential.user.uid)
-        .set(userDetail.toMap());
+    firestore.collection('userDetails').doc(credential.user.uid).set(userDetail.toMap());
   }
 
   //See this if it gets error from the auth use UserDetails from below too
