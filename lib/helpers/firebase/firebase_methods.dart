@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:github_sign_in/github_sign_in.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lazydo/data/models/userDetails.dart';
 
@@ -32,9 +34,46 @@ class FirebaseMethods {
     return null;
   }
 
+  //it does sign in and returns Credentials that later can be used to store in DB
+  Future<UserCredential> signInWithGithub(BuildContext context) async {
+    // Create a GitHubSignIn instance
+    final GitHubSignIn gitHubSignIn = GitHubSignIn(
+        clientId: 'ab8e3a7f9ac8b4de3981',
+        clientSecret: 'f7bf2847a9e0c52852a9cdeb5acb6959c2eee9dc',
+        redirectUrl: 'https://lazydo2020.firebaseapp.com/__/auth/handler');
+
+    // Trigger the sign-in flow
+    final result = await gitHubSignIn.signIn(context);
+    switch (result.status) {
+      case GitHubSignInResultStatus.ok:
+        print(result.token);
+        if (result.token != null) {
+// Create a credential from the access token
+          final AuthCredential githubAuthCredential =
+              GithubAuthProvider.credential(result.token);
+          return await _auth.signInWithCredential(githubAuthCredential);
+        } else {
+          print('error');
+          return null;
+        }
+        break;
+
+      case GitHubSignInResultStatus.cancelled:
+      case GitHubSignInResultStatus.failed:
+        print(result.errorMessage);
+        return null;
+        break;
+    }
+  }
+
   //Signout function makes current user as null
   Future<void> signOutWithGoogle() async {
     await GoogleSignIn().signOut();
+    return await _auth.signOut();
+  }
+
+  //Signout function makes current user as null
+  Future<void> signOutWithGithub() async {
     return await _auth.signOut();
   }
 
@@ -121,4 +160,5 @@ class FirebaseMethods {
   //     print('failed to signIn');
   //   }
   // });
+
 }
