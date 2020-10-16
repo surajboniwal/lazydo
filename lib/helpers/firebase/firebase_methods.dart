@@ -93,4 +93,32 @@ class FirebaseMethods {
         .then((value) => print("User Updated"))
         .catchError((error) => print("Failed to update user: $error"));
   }
+
+//Example of SignIN Flow with Google
+
+  // //here we sign in using google to Firebase and get the userCredential
+  // _firebaseRepository.signInWithGoogle().then((userCrendentValue) {
+  //   //if the signIn was successful
+  //   if (userCrendentValue != null) {
+  //     //Now here we go to database and see whether the user exists there or not
+  //     //Firebase inbuilt keeps the log of everything you know from the googleCredentials we only just
+  //     //store that into our cloudFirestore
+
+  //     //So in next function we go to this function we check that it exists or not , firebase will allow it to sign in by default
+  //     //But we need to have entry in the data base
+  //         _firebaseRepository.authenticateUser(userCrendentValue).then((isNewUser) {
+
+  //           if(isNewUser){
+  //            _firebaseRepository.addDataToDb(userCrendentValue).then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => WelcomeScreen())));
+  //           }
+  //           else{
+  //             Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => WelcomeScreen()));
+
+  //           }
+  //         });
+  //   }
+  //   else{
+  //     print('failed to signIn');
+  //   }
+  // });
 }
