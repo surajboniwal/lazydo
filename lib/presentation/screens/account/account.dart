@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:lazydo/controllers/account_controller.dart';
+import 'package:lazydo/presentation/screens/home/home.dart';
 import 'package:video_player/video_player.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -10,6 +12,7 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   VideoPlayerController _videoIntroController;
+  AccountController _accountController = AccountController();
 
   @override
   void initState() {
@@ -76,10 +79,32 @@ class _AccountScreenState extends State<AccountScreen> {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _buildSocialButton('assets/svg/google.svg'),
+                          GestureDetector(
+                            onTap: () {
+                              _accountController.signInWithGoogle();
+                            },
+                            child: _buildSocialButton('assets/svg/google.svg'),
+                          ),
                           _buildSocialButton('assets/svg/facebook.svg'),
                           _buildSocialButton('assets/svg/github.svg'),
                         ],
+                      ),
+                      GetBuilder<AccountController>(
+                        init: _accountController,
+                        builder: (controller) {
+                          return GestureDetector(
+                            onTap: () {
+                              _accountController.signOutWithGoogle();
+                            },
+                            onLongPress: () {
+                              Get.to(HomeScreen());
+                            },
+                            child: Text(
+                              _accountController.user == null ? 'User not logged in' : _accountController.user.email,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          );
+                        },
                       ),
                       SizedBox(height: Get.height * 0.05)
                     ],
