@@ -72,11 +72,6 @@ class FirebaseMethods {
     return await _auth.signOut();
   }
 
-  //Signout function makes current user as null
-  Future<void> signOutWithGithub() async {
-    return await _auth.signOut();
-  }
-
   //Get user Details
   Future<UserDetail> getUserDetails() async {
     User currentUser = await getUser();

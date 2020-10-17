@@ -48,7 +48,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
             ),
           ),
-          Container(color: Colors.black.withOpacity(0.2)),
+          Container(color: Colors.black.withOpacity(0.4)),
           Column(
             children: [
               Container(
@@ -75,34 +75,26 @@ class _AccountScreenState extends State<AccountScreen> {
                         ),
                       ),
                       SizedBox(height: 12),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              _accountController.signInWithGoogle();
-                            },
-                            child: _buildSocialButton('assets/svg/google.svg'),
-                          ),
-                          _buildSocialButton('assets/svg/facebook.svg'),
-                          _buildSocialButton('assets/svg/github.svg'),
-                        ],
-                      ),
                       GetBuilder<AccountController>(
                         init: _accountController,
                         builder: (controller) {
-                          return GestureDetector(
-                            onTap: () {
-                              _accountController.signOutWithGoogle();
-                            },
-                            onLongPress: () {
-                              Get.to(HomeScreen());
-                            },
-                            child: Text(
-                              _accountController.user == null ? 'User not logged in' : _accountController.user.email,
-                              style: TextStyle(color: Colors.white),
-                            ),
+                          return Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  controller.signInWithGoogle();
+                                },
+                                child: _buildSocialButton('assets/svg/google.svg'),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  controller.signOut();
+                                },
+                                child: _buildSocialButton('assets/svg/github.svg'),
+                              ),
+                            ],
                           );
                         },
                       ),

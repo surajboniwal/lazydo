@@ -1,37 +1,72 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lazydo/helpers/firebase/firebase_repository.dart';
+import 'package:lazydo/helpers/firebase/firebase_methods.dart';
+import 'package:lazydo/presentation/screens/account/account.dart';
+import 'package:lazydo/presentation/screens/home/home.dart';
 
-FirebaseRepository _repository = FirebaseRepository();
+FirebaseMethods _firebase = FirebaseMethods();
 
 class AccountController extends GetxController {
   User user = null;
 
   signInWithGoogle() {
-    _repository.signInWithGoogle().then(
+    _firebase.signInWithGoogle().then(
       (userCredential) {
         if (userCredential != null) {
-          _repository.authenticateUser(userCredential).then((isNewUser) {
-            if (isNewUser) {
-              _repository.addDataToDb(userCredential).then(
-                (value) {
-                  user = userCredential.user;
-                  update();
-                },
-              );
-            } else {
-              user = userCredential.user;
-              update();
-            }
-          });
+          _firebase.authenticateUser(userCredential).then(
+            (isNewUser) {
+              if (isNewUser) {
+                _firebase.addDataToDb(userCredential).then(
+                  (value) {
+                    user = userCredential.user;
+                    Get.off(HomeScreen());
+                  },
+                );
+              } else {
+                user = userCredential.user;
+                Get.off(HomeScreen());
+              }
+            },
+          );
+        } else {
+          Get.snackbar(
+            'Sign in error',
+            'Please select an account',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.white,
+            colorText: Colors.black,
+          );
         }
       },
     );
   }
 
-  signOutWithGoogle() {
-    _repository.signOutWithGoogle();
+  signOut() {
+    _firebase.signOutWithGoogle();
     user = null;
-    update();
+    Get.off(AccountScreen());
+  }
+
+  signInWithGithub(BuildContext context) {
+    _firebase.signInWithGithub(context).then(
+      (userCredential) {
+        if (userCredential != null) {
+          _firebase.authenticateUser(userCredential).then((isNewUser) {
+            if (isNewUser) {
+              _firebase.addDataToDb(userCredential).then(
+                (value) {
+                  user = userCredential.user;
+                  Get.off(HomeScreen());
+                },
+              );
+            } else {
+              user = userCredential.user;
+              Get.off(HomeScreen());
+            }
+          });
+        }
+      },
+    );
   }
 }
