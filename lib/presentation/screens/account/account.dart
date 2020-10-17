@@ -92,7 +92,12 @@ class _AccountScreenState extends State<AccountScreen> {
                                 onTap: () {
                                   controller.signOut();
                                 },
-                                child: _buildSocialButton('assets/svg/github.svg'),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    controller.signInWithGithub(context);
+                                  },
+                                  child: _buildSocialButton('assets/svg/github.svg'),
+                                ),
                               ),
                             ],
                           );
