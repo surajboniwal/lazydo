@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:lazydo/controllers/account_controller.dart';
+import 'package:lazydo/presentation/styles/colors.dart';
 import 'package:video_player/video_player.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -10,6 +12,7 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   VideoPlayerController _videoIntroController;
+  AccountController _accountController = AccountController();
 
   @override
   void initState() {
@@ -45,7 +48,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
             ),
           ),
-          Container(color: Colors.black.withOpacity(0.2)),
+          Container(color: Colors.black.withOpacity(0.5)),
           Column(
             children: [
               Container(
@@ -66,20 +69,22 @@ class _AccountScreenState extends State<AccountScreen> {
                         'Sign in to get started!',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                           fontFamily: 'Montserrat',
                         ),
                       ),
                       SizedBox(height: 12),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildSocialButton('assets/svg/google.svg'),
-                          _buildSocialButton('assets/svg/facebook.svg'),
-                          _buildSocialButton('assets/svg/github.svg'),
-                        ],
+                      GetBuilder<AccountController>(
+                        init: _accountController,
+                        builder: (controller) {
+                          return GestureDetector(
+                            onTap: () {
+                              controller.signInWithGoogle();
+                            },
+                            child: _buildSocialButton('assets/svg/google.svg'),
+                          );
+                        },
                       ),
                       SizedBox(height: Get.height * 0.05)
                     ],
@@ -87,6 +92,17 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
             ],
+          ),
+          GetBuilder<AccountController>(
+            init: _accountController,
+            builder: (_accountController) {
+              if (_accountController.showLoading) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return Container();
+            },
           ),
         ],
       ),
@@ -104,7 +120,7 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ],
       ),
-      child: SvgPicture.asset(iconLocation, height: 72),
+      child: SvgPicture.asset(iconLocation),
     );
   }
 }
