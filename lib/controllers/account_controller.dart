@@ -9,6 +9,7 @@ FirebaseMethods _firebase = FirebaseMethods();
 
 class AccountController extends GetxController {
   User user;
+  bool showLoading = false;
 
   AccountController() {
     user = FirebaseAuth.instance.currentUser;
@@ -16,6 +17,8 @@ class AccountController extends GetxController {
   }
 
   signInWithGoogle() {
+    showLoading = true;
+    update();
     _firebase.signInWithGoogle().then(
       (userCredential) {
         if (userCredential != null) {
@@ -24,11 +27,15 @@ class AccountController extends GetxController {
               if (isNewUser) {
                 _firebase.addDataToDb(userCredential).then(
                   (value) {
+                    showLoading = false;
+                    update();
                     user = userCredential.user;
                     Get.off(HomeScreen());
                   },
                 );
               } else {
+                showLoading = false;
+                update();
                 user = userCredential.user;
                 Get.off(HomeScreen());
               }
