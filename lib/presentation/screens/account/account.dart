@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:lazydo/controllers/account_controller.dart';
-import 'package:lazydo/presentation/styles/colors.dart';
 import 'package:video_player/video_player.dart';
 
 class AccountScreen extends StatefulWidget {

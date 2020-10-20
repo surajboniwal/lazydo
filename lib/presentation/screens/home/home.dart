@@ -3,7 +3,7 @@ import 'package:get/state_manager.dart';
 import 'package:lazydo/controllers/account_controller.dart';
 
 class HomeScreen extends StatelessWidget {
-  AccountController _accountController = AccountController();
+  final AccountController _accountController = AccountController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
