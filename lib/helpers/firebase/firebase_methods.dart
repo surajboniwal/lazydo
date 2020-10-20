@@ -1,15 +1,21 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:lazydo/data/models/userDetails.dart';
+
 import 'package:github_sign_in/github_sign_in.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:lazydo/data/models/userDetails.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+//Change this to another file
 
 class FirebaseMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignInAccount googleUser;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  static final CollectionReference _userCollection = FirebaseFirestore.instance.collection('userDetails');
+  static final CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('userDetails');
+  StorageReference _storageReference;
 
   //Future Method here if current user is null it means it logged out
   Future<User> getUser() async {
@@ -48,7 +54,8 @@ class FirebaseMethods {
         print(result.token);
         if (result.token != null) {
           // Create a credential from the access token
-          final AuthCredential githubAuthCredential = GithubAuthProvider.credential(result.token);
+          final AuthCredential githubAuthCredential =
+              GithubAuthProvider.credential(result.token);
           return await _auth.signInWithCredential(githubAuthCredential);
         } else {
           print('error');
@@ -75,13 +82,17 @@ class FirebaseMethods {
   //Get user Details
   Future<UserDetail> getUserDetails() async {
     User currentUser = await getUser();
-    DocumentSnapshot documentSnapshot = await _userCollection.doc(currentUser.uid).get();
+    DocumentSnapshot documentSnapshot =
+        await _userCollection.doc(currentUser.uid).get();
     return UserDetail.fromMap(documentSnapshot.data());
   }
 
   //Is user present in DB
   Future<bool> authenticateUser(UserCredential userCredential) async {
-    QuerySnapshot results = await firestore.collection('userDetails').where('email', isEqualTo: userCredential.user.email).get();
+    QuerySnapshot results = await firestore
+        .collection('userDetails')
+        .where('email', isEqualTo: userCredential.user.email)
+        .get();
     final List<DocumentSnapshot> docs = results.docs;
 
     return docs.length == 0 ? true : false;
@@ -101,7 +112,10 @@ class FirebaseMethods {
         profilePhoto: credential.user.photoURL,
         userName: username);
 
-    firestore.collection('userDetails').doc(credential.user.uid).set(userDetail.toMap());
+    firestore
+        .collection('userDetails')
+        .doc(credential.user.uid)
+        .set(userDetail.toMap());
   }
 
   //See this if it gets error from the auth use UserDetails from below too
