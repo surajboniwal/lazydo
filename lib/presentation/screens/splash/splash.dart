@@ -27,7 +27,7 @@ class SplashScreen extends StatelessWidget {
                 Get.off(AccountScreen());
               } else {
                 print(_accountController.user);
-                Get.off(ProfileSetup());
+                Get.off(HomeScreen());
               }
             }
           },

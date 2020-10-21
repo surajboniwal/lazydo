@@ -5,26 +5,25 @@ import 'package:lazydo/presentation/screens/profile_setup/widgets/clippers.dart'
 import 'package:lazydo/presentation/screens/profile_setup/widgets/input_field.dart';
 import 'package:lazydo/presentation/styles/colors.dart';
 
-class ProfileSetup extends StatefulWidget {
+class ProfileSetupScreen extends StatefulWidget {
   @override
-  _ProfileSetupState createState() => _ProfileSetupState();
+  _ProfileSetupScreenState createState() => _ProfileSetupScreenState();
 }
 
-class _ProfileSetupState extends State<ProfileSetup> {
+class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final AccountController _accountController = AccountController();
 
   final TextEditingController _displayNameController = TextEditingController();
 
   final TextEditingController _emailController = TextEditingController();
 
-  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _bioController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _displayNameController.text = _accountController.user.displayName;
     _emailController.text = _accountController.user.email;
-    _userNameController.text = 'Lazy_' + _accountController.user.displayName.split(' ')[0] + _accountController.user.displayName.split(' ')[1];
   }
 
   @override
@@ -32,7 +31,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
     super.dispose();
     _displayNameController.dispose();
     _emailController.dispose();
-    _userNameController.dispose();
+    _bioController.dispose();
   }
 
   @override
@@ -40,68 +39,71 @@ class _ProfileSetupState extends State<ProfileSetup> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          height: Get.height * 0.9,
+          height: Get.height * 0.92,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Stack(
-                children: [
-                  ClipPath(
-                    clipper: ProfileSetupTopContainerClipper(),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(_accountController.user.photoURL),
+              ClipPath(
+                clipper: ProfileSetupTopContainerClipper(),
+                child: Container(
+                  color: AppColors.primaryColor,
+                  height: Get.height * 0.4,
+                  width: Get.width,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).padding.top),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          'Setup your profile',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
-                      ),
-                      height: Get.height * 0.4,
-                      width: Get.width,
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(_accountController.user.photoURL),
+                          radius: Get.width * 0.13,
+                        ),
+                        Text(
+                          'Let’s  find out a little bit about you \nThis won’t take long!',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Container(
-                    height: Get.height * 0.4,
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 24),
-                        child: FloatingActionButton(
-                          onPressed: () {},
-                          child: Icon(Icons.edit),
-                          backgroundColor: AppColors.primaryColor,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+                ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 24, right: 24),
+                padding: EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
-                    InputField(displayNameController: _displayNameController, label: 'Display Name'),
-                    SizedBox(height: 24),
-                    InputField(displayNameController: _emailController, label: 'Email'),
-                    SizedBox(height: 24),
-                    InputField(displayNameController: _userNameController, label: 'Username'),
+                    InputField(displayNameController: _displayNameController, label: 'Name', enabled: true, isBio: false),
+                    SizedBox(height: 12),
+                    InputField(displayNameController: _emailController, label: 'Email', enabled: false, isBio: false),
+                    SizedBox(height: 12),
+                    InputField(displayNameController: _bioController, label: 'Bio', enabled: true, isBio: true),
                   ],
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 42, vertical: 14),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                ),
-                child: Text(
-                  'Submit',
-                  style: TextStyle(
-                    color: Colors.white,
+              SizedBox(
+                width: 120,
+                height: 48,
+                child: RaisedButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(color: Colors.white),
                   ),
+                  color: AppColors.primaryColor,
                 ),
-              )
+              ),
             ],
           ),
         ),
