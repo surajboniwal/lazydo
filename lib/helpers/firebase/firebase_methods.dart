@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:lazydo/data/models/userDetails.dart';
 
@@ -16,6 +18,7 @@ class FirebaseMethods {
   static final CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('userDetails');
   StorageReference _storageReference;
+  double uploadProgress = 0;
 
   //Future Method here if current user is null it means it logged out
   Future<User> getUser() async {
@@ -135,32 +138,29 @@ class FirebaseMethods {
         .catchError((error) => print("Failed to update user: $error"));
   }
 
-// //Example of SignIN Flow with Google
+  Future<String> uploadImageToStorage(File image, String userId) async {
+    try {
+      _storageReference = FirebaseStorage.instance
+          .ref()
+          .child('profileImages')
+          .child('$userId');
 
-//   //here we sign in using google to Firebase and get the userCredential
-//   _firebaseRepository.signInWithGoogle().then((userCrendentValue) {
-//     //if the signIn was successful
-//     if (userCrendentValue != null) {
-//       //Now here we go to database and see whether the user exists there or not
-//       //Firebase inbuilt keeps the log of everything you know from the googleCredentials we only just
-//       //store that into our cloudFirestore
+      StorageUploadTask _storageUploadTask = _storageReference.putFile(image);
 
-//       //So in next function we go to this function we check that it exists or not , firebase will allow it to sign in by default
-//       //But we need to have entry in the data base
-//           _firebaseRepository.authenticateUser(userCrendentValue).then((isNewUser) {
+      _storageUploadTask.events.listen((event) {
+        uploadProgress =
+            (event.snapshot.totalByteCount / event.snapshot.bytesTransferred) *
+                100;
 
-//             if(isNewUser){
-//              _firebaseRepository.addDataToDb(userCrendentValue).then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => WelcomeScreen())));
-//             }
-//             else{
-//               Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => WelcomeScreen()));
+        print('Progress: $uploadProgress %');
+      });
 
-//             }
-//           });
-//     }
-//     else{
-//       print('failed to signIn');
-//     }
-//   });
-
+      var url =
+          await (await _storageUploadTask.onComplete).ref.getDownloadURL();
+      return url;
+    } catch (E) {
+      print(E);
+      return null;
+    }
+  }
 }
