@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:lazydo/data/models/avatarDetails.dart';
 import 'package:lazydo/data/models/userDetails.dart';
 
 import 'package:github_sign_in/github_sign_in.dart';
@@ -16,6 +17,8 @@ class FirebaseMethods {
   GoogleSignInAccount googleUser;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   static final CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('userDetails');
+  static final CollectionReference _avatarCollection =
       FirebaseFirestore.instance.collection('userDetails');
   StorageReference _storageReference;
   double uploadProgress = 0;
@@ -88,6 +91,17 @@ class FirebaseMethods {
     DocumentSnapshot documentSnapshot =
         await _userCollection.doc(currentUser.uid).get();
     return UserDetail.fromMap(documentSnapshot.data());
+  }
+
+  //Get user Avatars
+  Future<List> getAvatarURL() async {
+    QuerySnapshot results = await _avatarCollection.get();
+    List avatarUrls = List<String>();
+    results.docs.forEach((element) {
+      avatarUrls.add(element.data()['avatarLink']);
+    });
+
+    return avatarUrls;
   }
 
   //Is user present in DB
