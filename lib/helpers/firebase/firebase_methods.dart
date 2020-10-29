@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:lazydo/data/models/avatarDetails.dart';
+
 import 'package:lazydo/data/models/userDetails.dart';
 
 import 'package:github_sign_in/github_sign_in.dart';
