@@ -19,7 +19,7 @@ class FirebaseMethods {
   static final CollectionReference _userCollection =
       FirebaseFirestore.instance.collection('userDetails');
   static final CollectionReference _avatarCollection =
-      FirebaseFirestore.instance.collection('userDetails');
+      FirebaseFirestore.instance.collection('Avatars');
   StorageReference _storageReference;
   double uploadProgress = 0;
 
