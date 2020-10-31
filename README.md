@@ -1,4 +1,4 @@
-
+<p align="center"><img align="center" src="./assets/svg/logo_dark.svg" height="128" /></p>
 <h1 align="center">LazyDo</h1>
 <p align="center">
   <a href="#" target="_blank">
