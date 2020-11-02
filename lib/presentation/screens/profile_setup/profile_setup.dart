@@ -1,10 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lazydo/controllers/account_controller.dart';
 import 'package:lazydo/controllers/user_controller.dart';
+import 'package:lazydo/helpers/Image/imagehandler.dart';
+import 'package:lazydo/helpers/firebase/firebase_methods.dart';
 import 'package:lazydo/presentation/screens/profile_setup/widgets/clippers.dart';
 import 'package:lazydo/presentation/screens/profile_setup/widgets/input_field.dart';
 import 'package:lazydo/presentation/styles/colors.dart';
+
+FirebaseMethods _firebaseMethods = FirebaseMethods();
 
 class ProfileSetupScreen extends StatefulWidget {
   @override
@@ -64,99 +71,12 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-                              ),
-                              enableDrag: true,
-                              builder: (context) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryColor,
-                                    borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 16),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(
-                                          'Choose an avatar',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        SizedBox(height: 12),
-                                        GetBuilder<UserController>(
-                                          init: _userController,
-                                          builder: (_userController) {
-                                            return Container(
-                                              height: 80,
-                                              child: ListView.builder(
-                                                scrollDirection: Axis.horizontal,
-                                                itemCount: _userController.avatars.length,
-                                                itemBuilder: (context, index) {
-                                                  return Padding(
-                                                    padding: EdgeInsets.only(right: 16, left: index == 0 ? 16 : 0),
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        _userController.changeAvatar(index);
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: CircleAvatar(
-                                                        backgroundImage: NetworkImage(_userController.avatars[index]),
-                                                        minRadius: 32,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        SizedBox(height: 12),
-                                        Text('OR', style: TextStyle(color: Colors.white, fontSize: 12)),
-                                        SizedBox(height: 16),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.all(12),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.all(Radius.circular(12)),
-                                              ),
-                                              child: Column(
-                                                children: [Icon(Icons.camera), Text('Camera')],
-                                              ),
-                                            ),
-                                            SizedBox(width: 12),
-                                            Container(
-                                              padding: EdgeInsets.all(12),
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.all(Radius.circular(12)),
-                                              ),
-                                              child: Column(
-                                                children: [Icon(Icons.image), Text('Gallery')],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
+                            buildBottomSheet(context);
                           },
                           child: GetBuilder<UserController>(
                             init: _userController,
                             builder: (controller) => CircleAvatar(
-                              backgroundImage: NetworkImage(_userController.selectedAvatar ?? _accountController.user.photoURL),
+                              backgroundImage: _userController.isNetwork ? NetworkImage(_userController.selectedAvatar) : FileImage(_userController.selectedFile),
                               radius: Get.width * 0.13,
                             ),
                           ),
@@ -202,6 +122,111 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future buildBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      enableDrag: true,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.primaryColor,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  'Choose an avatar',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+                SizedBox(height: 12),
+                GetBuilder<UserController>(
+                  init: _userController,
+                  builder: (_userController) {
+                    return Container(
+                      height: 80,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _userController.avatars.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.only(right: 16, left: index == 0 ? 16 : 0),
+                            child: GestureDetector(
+                              onTap: () {
+                                _userController.changeAvatar(_userController.avatars[index]);
+                                _userController.changeType(true);
+                                Navigator.pop(context);
+                              },
+                              child: CircleAvatar(
+                                backgroundImage: NetworkImage(_userController.avatars[index]),
+                                minRadius: 32,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(height: 12),
+                Text('OR', style: TextStyle(color: Colors.white, fontSize: 12)),
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        _firebaseMethods.uploadImageToStorage(await ImageHandler.pickImage(ImageSource.camera), _accountController.user.uid);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                        child: Column(
+                          children: [Icon(Icons.camera), Text('Camera')],
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    GestureDetector(
+                      onTap: () async {
+                        File image = await ImageHandler.pickImage(ImageSource.gallery);
+                        _userController.setFile(image);
+                        Navigator.pop(context);
+                        _userController.changeType(false);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                        child: Column(
+                          children: [Icon(Icons.image), Text('Gallery')],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

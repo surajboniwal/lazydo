@@ -16,10 +16,8 @@ class FirebaseMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignInAccount googleUser;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  static final CollectionReference _userCollection =
-      FirebaseFirestore.instance.collection('userDetails');
-  static final CollectionReference _avatarCollection =
-      FirebaseFirestore.instance.collection('Avatars');
+  static final CollectionReference _userCollection = FirebaseFirestore.instance.collection('userDetails');
+  static final CollectionReference _avatarCollection = FirebaseFirestore.instance.collection('Avatars');
   StorageReference _storageReference;
   double uploadProgress = 0;
 
@@ -48,10 +46,8 @@ class FirebaseMethods {
   //it does sign in and returns Credentials that later can be used to store in DB
   Future<UserCredential> signInWithGithub(BuildContext context) async {
     // Create a GitHubSignIn instance
-    final GitHubSignIn gitHubSignIn = GitHubSignIn(
-        clientId: 'ab8e3a7f9ac8b4de3981',
-        clientSecret: 'f7bf2847a9e0c52852a9cdeb5acb6959c2eee9dc',
-        redirectUrl: 'https://lazydo2020.firebaseapp.com/__/auth/handler');
+    final GitHubSignIn gitHubSignIn =
+        GitHubSignIn(clientId: 'ab8e3a7f9ac8b4de3981', clientSecret: 'f7bf2847a9e0c52852a9cdeb5acb6959c2eee9dc', redirectUrl: 'https://lazydo2020.firebaseapp.com/__/auth/handler');
 
     // Trigger the sign-in flow
     final result = await gitHubSignIn.signIn(context);
@@ -60,8 +56,7 @@ class FirebaseMethods {
         print(result.token);
         if (result.token != null) {
           // Create a credential from the access token
-          final AuthCredential githubAuthCredential =
-              GithubAuthProvider.credential(result.token);
+          final AuthCredential githubAuthCredential = GithubAuthProvider.credential(result.token);
           return await _auth.signInWithCredential(githubAuthCredential);
         } else {
           print('error');
@@ -88,8 +83,7 @@ class FirebaseMethods {
   //Get user Details
   Future<UserDetail> getUserDetails() async {
     User currentUser = await getUser();
-    DocumentSnapshot documentSnapshot =
-        await _userCollection.doc(currentUser.uid).get();
+    DocumentSnapshot documentSnapshot = await _userCollection.doc(currentUser.uid).get();
     return UserDetail.fromMap(documentSnapshot.data());
   }
 
@@ -106,10 +100,7 @@ class FirebaseMethods {
 
   //Is user present in DB
   Future<bool> authenticateUser(UserCredential userCredential) async {
-    QuerySnapshot results = await firestore
-        .collection('userDetails')
-        .where('email', isEqualTo: userCredential.user.email)
-        .get();
+    QuerySnapshot results = await firestore.collection('userDetails').where('email', isEqualTo: userCredential.user.email).get();
     final List<DocumentSnapshot> docs = results.docs;
 
     return docs.length == 0 ? true : false;
@@ -122,55 +113,33 @@ class FirebaseMethods {
     //Later generate dynamically
     String username = 'LazyUser';
 
-    userDetail = UserDetail(
-        id: credential.user.uid,
-        email: credential.user.email,
-        displayName: credential.user.displayName,
-        profilePhoto: credential.user.photoURL,
-        userName: username);
+    userDetail = UserDetail(id: credential.user.uid, email: credential.user.email, displayName: credential.user.displayName, profilePhoto: credential.user.photoURL, userName: username);
 
-    firestore
-        .collection('userDetails')
-        .doc(credential.user.uid)
-        .set(userDetail.toMap());
+    firestore.collection('userDetails').doc(credential.user.uid).set(userDetail.toMap());
   }
 
   //See this if it gets error from the auth use UserDetails from below too
   Future<void> updateUser(User user, String key, String value) {
-    return _userCollection
-        .doc(user.uid)
-        .update({'$key': '$value'})
-        .then((value) => print("User Updated"))
-        .catchError((error) => print("Failed to update user: $error"));
+    return _userCollection.doc(user.uid).update({'$key': '$value'}).then((value) => print("User Updated")).catchError((error) => print("Failed to update user: $error"));
   }
 
   Future<void> updateUserUsingClass(UserDetail user, String key, String value) {
-    return _userCollection
-        .doc(user.id)
-        .update({'$key': '$value'})
-        .then((value) => print("User Updated"))
-        .catchError((error) => print("Failed to update user: $error"));
+    return _userCollection.doc(user.id).update({'$key': '$value'}).then((value) => print("User Updated")).catchError((error) => print("Failed to update user: $error"));
   }
 
   Future<String> uploadImageToStorage(File image, String userId) async {
     try {
-      _storageReference = FirebaseStorage.instance
-          .ref()
-          .child('profileImages')
-          .child('$userId');
+      _storageReference = FirebaseStorage.instance.ref().child('profileImages').child('$userId');
 
       StorageUploadTask _storageUploadTask = _storageReference.putFile(image);
 
       _storageUploadTask.events.listen((event) {
-        uploadProgress =
-            (event.snapshot.totalByteCount / event.snapshot.bytesTransferred) *
-                100;
+        uploadProgress = (event.snapshot.totalByteCount / event.snapshot.bytesTransferred) * 100;
 
         print('Progress: $uploadProgress %');
       });
 
-      var url =
-          await (await _storageUploadTask.onComplete).ref.getDownloadURL();
+      var url = await (await _storageUploadTask.onComplete).ref.getDownloadURL();
       return url;
     } catch (E) {
       print(E);
