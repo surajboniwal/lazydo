@@ -1,16 +1,14 @@
-# lazydo
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<p align="center"><img align="center" src="./assets/svg/logo_dark.svg" height="128" /></p>
+<h1 align="center">LazyDo</h1>
+<p align="center">
+  <a href="#" target="_blank">
+    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
+  </a>
+  <img alt="Documentation" src="https://img.shields.io/badge/-Flutter-blue?&logo=flutter" />
+  <img alt="Documentation" src="https://img.shields.io/badge/-Firebase-blue?&logo=firebase" />
+<!--   <a href="#" target="_blank">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+  </a> -->
+<!--   <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/surajboniwal/LazyDo"> -->
+<!--     <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/surajboniwal/LazyDo/Flutter%20CI?logo=dart&logoColor=lightblue"> -->
+</p>

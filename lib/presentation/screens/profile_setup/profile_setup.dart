@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lazydo/controllers/account_controller.dart';
+import 'package:lazydo/controllers/user_controller.dart';
 import 'package:lazydo/presentation/screens/profile_setup/widgets/clippers.dart';
 import 'package:lazydo/presentation/screens/profile_setup/widgets/input_field.dart';
 import 'package:lazydo/presentation/styles/colors.dart';
@@ -12,11 +13,9 @@ class ProfileSetupScreen extends StatefulWidget {
 
 class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final AccountController _accountController = AccountController();
-
+  final UserController _userController = UserController();
   final TextEditingController _displayNameController = TextEditingController();
-
   final TextEditingController _emailController = TextEditingController();
-
   final TextEditingController _bioController = TextEditingController();
 
   @override
@@ -63,9 +62,104 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                             fontWeight: FontWeight.w900,
                           ),
                         ),
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(_accountController.user.photoURL),
-                          radius: Get.width * 0.13,
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+                              ),
+                              enableDrag: true,
+                              builder: (context) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryColor,
+                                    borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 16),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(
+                                          'Choose an avatar',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        SizedBox(height: 12),
+                                        GetBuilder<UserController>(
+                                          init: _userController,
+                                          builder: (_userController) {
+                                            return Container(
+                                              height: 80,
+                                              child: ListView.builder(
+                                                scrollDirection: Axis.horizontal,
+                                                itemCount: _userController.avatars.length,
+                                                itemBuilder: (context, index) {
+                                                  return Padding(
+                                                    padding: EdgeInsets.only(right: 16, left: index == 0 ? 16 : 0),
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        _userController.changeAvatar(index);
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: CircleAvatar(
+                                                        backgroundImage: NetworkImage(_userController.avatars[index]),
+                                                        minRadius: 32,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        SizedBox(height: 12),
+                                        Text('OR', style: TextStyle(color: Colors.white, fontSize: 12)),
+                                        SizedBox(height: 16),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(12),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.all(Radius.circular(12)),
+                                              ),
+                                              child: Column(
+                                                children: [Icon(Icons.camera), Text('Camera')],
+                                              ),
+                                            ),
+                                            SizedBox(width: 12),
+                                            Container(
+                                              padding: EdgeInsets.all(12),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.all(Radius.circular(12)),
+                                              ),
+                                              child: Column(
+                                                children: [Icon(Icons.image), Text('Gallery')],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: GetBuilder<UserController>(
+                            init: _userController,
+                            builder: (controller) => CircleAvatar(
+                              backgroundImage: NetworkImage(_userController.selectedAvatar ?? _accountController.user.photoURL),
+                              radius: Get.width * 0.13,
+                            ),
+                          ),
                         ),
                         Text(
                           'Let’s  find out a little bit about you \nThis won’t take long!',
