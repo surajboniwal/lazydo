@@ -1,37 +1,19 @@
-import 'dart:io';
-
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
+import 'package:lazydo/data/models/userDetails.dart';
 import 'package:lazydo/helpers/firebase/firebase_methods.dart';
 
 FirebaseMethods _firebaseMethods = FirebaseMethods();
 
 class UserController extends GetxController {
-  List<String> avatars = [];
-  String selectedAvatar = "https://image.shutterstock.com/image-photo/landscape-imaage-sea-sunset-260nw-336142157.jpg";
-  File selectedFile;
-  bool isNetwork = true;
+  UserDetail user = null;
 
   UserController() {
-    if (avatars.length == 0) {
-      _firebaseMethods.getAvatarURL().then((value) {
-        avatars = value;
+    if (user == null) {
+      _firebaseMethods.getUserDetails().then((value) {
+        user = value;
         update();
       });
     }
-  }
-
-  setFile(File image) {
-    selectedFile = image;
-    update();
-  }
-
-  changeType(bool boolean) {
-    isNetwork = boolean;
-    update();
-  }
-
-  changeAvatar(String image) {
-    selectedAvatar = image;
-    update();
   }
 }

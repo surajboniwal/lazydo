@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lazydo/helpers/firebase/firebase_methods.dart';
 import 'package:lazydo/presentation/screens/account/account.dart';
-import 'package:lazydo/presentation/screens/home/home.dart';
 import 'package:lazydo/presentation/screens/profile_setup/profile_setup.dart';
 
 FirebaseMethods _firebase = FirebaseMethods();

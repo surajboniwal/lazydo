@@ -5,7 +5,6 @@ import 'package:lazydo/controllers/account_controller.dart';
 import 'package:lazydo/presentation/screens/account/account.dart';
 import 'package:lazydo/presentation/screens/home/home.dart';
 import 'package:lazydo/presentation/screens/onboarding/onboarding.dart';
-import 'package:lazydo/presentation/screens/profile_setup/profile_setup.dart';
 import 'package:lazydo/presentation/styles/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
