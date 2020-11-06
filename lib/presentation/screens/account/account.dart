@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:lazydo/controllers/account_controller.dart';
+
 import 'package:video_player/video_player.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -16,7 +17,8 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   void initState() {
     super.initState();
-    _videoIntroController = VideoPlayerController.asset('assets/video/intro.mp4');
+    _videoIntroController =
+        VideoPlayerController.asset('assets/video/intro.mp4');
     _videoIntroController.addListener(() {
       setState(() {});
     });
@@ -43,7 +45,9 @@ class _AccountScreenState extends State<AccountScreen> {
               child: SizedBox(
                 width: _videoIntroController.value.size?.width ?? 0,
                 height: _videoIntroController.value.size?.height ?? 0,
-                child: _videoIntroController.value.initialized ? VideoPlayer(_videoIntroController) : Container(),
+                child: _videoIntroController.value.initialized
+                    ? VideoPlayer(_videoIntroController)
+                    : Container(),
               ),
             ),
           ),
