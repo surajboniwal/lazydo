@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:lazydo/data/models/userDetails.dart';
 import 'package:lazydo/helpers/firebase/firebase_methods.dart';
